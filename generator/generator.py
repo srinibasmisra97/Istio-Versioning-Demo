@@ -3,10 +3,10 @@ import yaml
 import os
 import json
 
-BACKEND_TEMPLATES = "../k8s/backend"
-FRONTEND_TEMPLATES = "../k8s/frontend"
-OUTPUT_DIR = "../k8s/outputs"
-NAMES_FILE = "names.txt"
+BACKEND_TEMPLATES = "./k8s/backend"
+FRONTEND_TEMPLATES = "./k8s/frontend"
+OUTPUT_DIR = "./k8s/outputs"
+NAMES_FILE = "./generator/names.txt"
 
 def parse_command_line_args():
     parser = argparse.ArgumentParser(description='Deployment YAML Generator')
@@ -34,6 +34,8 @@ def parse_command_line_args():
 
 def clean_names():
     names = open(NAMES_FILE, "r").read().split("\n")
+
+    names = [name for name in names if name != '']
 
     for i in range(len(names)):
         names[i] = names[i].split("/")[1]
@@ -64,7 +66,6 @@ def generate_destination_rules(mode, version, existing_deloyments):
     template_dir = BACKEND_TEMPLATES if mode == "backend" else FRONTEND_TEMPLATES
 
     template = yaml.safe_load(open(os.path.join(template_dir, "destinationrule.yaml")))
-    rule_template = json.load(open(os.path.join(template_dir, "rule.json")))
     
     if version not in existing_deloyments:
         existing_deloyments.append(version)
@@ -72,11 +73,13 @@ def generate_destination_rules(mode, version, existing_deloyments):
     subsets = []
     
     for name in existing_deloyments:
-        rule = rule_template
-        rule['name'] = name
-        rule['labels']['version'] = name
-        subsets.append(rule)
-    
+        subsets.append({
+            "name": name,
+            "labels": {
+                "version": name
+            }
+        })
+
     template['spec']['subsets'] = subsets
     json.dump(template, open(os.path.join(OUTPUT_DIR, "destinationrule.json"), "w"))
     print("\nGENERATED DESTINATION RULE JSON")
@@ -85,27 +88,44 @@ def generate_virtual_service(mode, version, existing_deloyments):
     template_dir = BACKEND_TEMPLATES if mode == "backend" else FRONTEND_TEMPLATES
 
     template = yaml.safe_load(open(os.path.join(template_dir, "virtualservice.yaml")))
-    service_template = json.load(open(os.path.join(template_dir, "virtualservice.json")))
     
     if version not in existing_deloyments:
         existing_deloyments.append(version)
     
+    temp = []
     for name in existing_deloyments:
-        service = service_template
-        service['match'][0]["headers"]["version"]["exact"] = name
-        service['route'][0]['destination']['subset'] = name
-        template['spec']['http'].append(service)
+        temp.append({
+            "match": [
+                {
+                "headers": {
+                    "version": {
+                    "exact" : name
+                    }
+                }
+                }
+            ],
+            "route": [
+                {
+                "destination": {
+                    "host": "backend",
+                    "subset": name,
+                    "port": {
+                    "number": 5000
+                    }
+                }
+                }
+            ]
+        })
     
+    temp.append(template['spec']['http'][0])
+    template['spec']['http'] = temp
     json.dump(template, open(os.path.join(OUTPUT_DIR, "virtualservice.json"), "w"))
     print("\nGENERATED VIRTUAL SERVICE JSON")
 
 if __name__=="__main__":
     args = parse_command_line_args()
     
-    print("Existing Deployments: ")
     filtered = filter_deployments (names=clean_names(), mode=args.mode)
-    for name in filtered:
-        print(name)
     
     if not os.path.exists(OUTPUT_DIR):
         os.mkdir(OUTPUT_DIR)

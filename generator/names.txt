@@ -1,5 +1,2 @@
 deployment.apps/backend-live
-deployment.apps/backend-v2
 deployment.apps/frontend-live
-deployment.apps/frontend-v1
-deployment.apps/frontend-v2

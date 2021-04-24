@@ -4,5 +4,4 @@ metadata:
   name: frontend
 spec:
   host: frontend
-  subsets:
--DestinationRule-
+  subsets: []

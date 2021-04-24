@@ -8,7 +8,6 @@ spec:
   gateways:
   - istio-demo
   http:
--VIRTUALSERVICE-
   - route:
     - destination:
         host: frontend

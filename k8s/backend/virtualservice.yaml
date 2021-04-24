@@ -6,7 +6,6 @@ spec:
   hosts:
   - backend
   http:
--VIRTUALSERVICE-
   - route:
     - destination:
         host: backend

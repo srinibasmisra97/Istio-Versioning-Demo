@@ -4,5 +4,4 @@ metadata:
   name: backend
 spec:
   host: backend
-  subsets:
--DestinationRule-
+  subsets: []

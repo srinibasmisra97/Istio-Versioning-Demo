@@ -15,12 +15,16 @@ steps:
 
 - name: 'alpine'
   id: 'Print'
+  entrypoint: /bin/sh
   args:
-    - $BRANCH_NAME
+    - -c
+    - 'echo $BRANCH_NAME'
 
 - name: 'python:3.8'
   id: 'Generate Deployment Files'
+  entrypoint: /bin/sh
   args:
+    - python
     - ./generator/generator.py
     - --mode backend
     - --version $BRANCH_NAME

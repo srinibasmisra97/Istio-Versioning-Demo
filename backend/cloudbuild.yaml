@@ -18,7 +18,13 @@ steps:
   entrypoint: /bin/sh
   args:
     - -c
-    - 'chown -R root:root ./ && python ./generator/generator.py --mode backend --version $BRANCH_NAME --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA'
+    - |
+    - chown -R root:root ./
+      pip install -r ./generator/requirements.txt
+      python ./generator/generator.py \
+        --mode backend \
+        --version $BRANCH_NAME \
+        --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
 
 # - name: 'python'
 #   id: 'Generate Deployment Files'

@@ -130,6 +130,10 @@ if __name__=="__main__":
     if not os.path.exists(OUTPUT_DIR):
         os.mkdir(OUTPUT_DIR)
     
+    if args.mode in args.version:
+        names = args.version.split("/")
+        args.version = names[len(names) - 1]
+
     generate_deployment(args.mode, args.image, args.version)
     generate_destination_rules(args.mode, args.version, filtered)
     generate_virtual_service(args.mode, args.version, filtered)

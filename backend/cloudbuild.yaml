@@ -1,31 +1,24 @@
 steps:
-- name: 'gcr.io/cloud-builders/docker'
-  id: 'Build'
-  args:
-    - build
-    - ./backend/
-    - -t
-    - gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
+# - name: 'gcr.io/cloud-builders/docker'
+#   id: 'Build'
+#   args:
+#     - build
+#     - ./backend/
+#     - -t
+#     - gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
 
-- name: 'gcr.io/cloud-builders/docker'
-  id: 'Push'
-  args:
-    - push
-    - gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
-
-- name: 'alpine'
-  id: 'Print'
-  entrypoint: /bin/sh
-  args:
-    - -c
-    - 'echo $BRANCH_NAME'
+# - name: 'gcr.io/cloud-builders/docker'
+#   id: 'Push'
+#   args:
+#     - push
+#     - gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
 
 - name: 'python'
   id: 'Generate Deployment Files'
   entrypoint: /bin/sh
   args:
     - -c
-    - 'whoami'
+    - 'chown -R root:root ./ && python ./generator/generator.py --mode backend --version $BRANCH_NAME --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA'
 
 # - name: 'python'
 #   id: 'Generate Deployment Files'

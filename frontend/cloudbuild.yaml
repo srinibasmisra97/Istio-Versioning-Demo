@@ -1,0 +1,54 @@
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Build'
+  args:
+    - build
+    - ./frontend/
+    - -t
+    - gcr.io/$PROJECT_ID/istio-demo-frontend:$SHORT_SHA
+
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push'
+  args:
+    - push
+    - gcr.io/$PROJECT_ID/istio-demo-frontend:$SHORT_SHA
+
+- name: 'python'
+  id: 'Generate Deployment Files'
+  entrypoint: /bin/sh
+  args:
+    - -c
+    - 'chown -R root:root ./ && pip install pyyaml && python generator/generator.py --mode frontend --version $BRANCH_NAME --image gcr.io/$PROJECT_ID/istio-demo-frontend:$SHORT_SHA'
+
+- name: 'gcr.io/cloud-builders/gke-deploy'
+  id: Deployment
+  args:
+  - run
+  - --filename=./k8s/outputs/deployment.yaml
+  - --location=${_GCP_ZONE}
+  - --cluster=${_GKE_CLUSTER}
+
+- name: 'gcr.io/cloud-builders/kubectl'
+  id: Destination Rules
+  args:
+  - apply
+  - -f
+  - ./k8s/outputs/destinationrule.yaml
+  env:
+    - CLOUDSDK_COMPUTE_ZONE=${_GCP_ZONE}
+    - CLOUDSDK_CONTAINER_CLUSTER=${_GKE_CLUSTER}
+
+- name: 'gcr.io/cloud-builders/kubectl'
+  id: Virtual Service
+  args:
+  - apply
+  - -f
+  - ./k8s/outputs/virtualservice.yaml
+  env:
+    - CLOUDSDK_COMPUTE_ZONE=${_GCP_ZONE}
+    - CLOUDSDK_CONTAINER_CLUSTER=${_GKE_CLUSTER}
+  
+substitutions:
+  _GCP_REGION: us-central1
+  _GCP_ZONE: us-central1-c
+  _GKE_CLUSTER: demo-cluster

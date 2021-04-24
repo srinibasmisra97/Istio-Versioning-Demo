@@ -6,10 +6,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Index</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 </head>
 
 <body>
-  <h1 style="color: blue">{{ data }}</h1>
+  <h1 style="color: blue" id="data"></h1>
 </body>
+
+<script>
+  var urls = {{ data|tojson }}
+  $(document).ready(function(){
+    $.get(urls['url'] + "/generate", function(data, status){
+      document.getElementById("data").innerText = data;
+    })
+  })
+</script>
 
 </html>

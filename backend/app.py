@@ -1,7 +1,9 @@
 import random, string
 from flask import Flask, render_template
+from flask_cors import CORS
 
 app = Flask(__name__, template_folder='templates')
+cors = CORS(app, resources={r"*": {"origins": "*"}})
 
 @app.route("/generate")
 def index():
@@ -9,4 +11,4 @@ def index():
     return "v1-" + random_string
 
 if __name__=="__main__":
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=5022)

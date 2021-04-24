@@ -20,11 +20,9 @@ steps:
     - -c
     - 'echo $BRANCH_NAME'
 
-- name: 'python:3.8'
+- name: 'python'
   id: 'Generate Deployment Files'
-  entrypoint: /bin/sh
   args:
-    - python
     - ./generator/generator.py
     - --mode backend
     - --version $BRANCH_NAME

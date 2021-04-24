@@ -25,6 +25,7 @@ steps:
         --mode backend \
         --version $BRANCH_NAME \
         --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
+      ls k8s/outputs/
 
 # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
 #   id: 'Deploy'

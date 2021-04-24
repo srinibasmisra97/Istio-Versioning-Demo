@@ -1,17 +1,17 @@
 steps:
-# - name: 'gcr.io/cloud-builders/docker'
-#   id: 'Build'
-#   args:
-#     - build
-#     - ./backend/
-#     - -t
-#     - gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Build'
+  args:
+    - build
+    - ./backend/
+    - -t
+    - gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
 
-# - name: 'gcr.io/cloud-builders/docker'
-#   id: 'Push'
-#   args:
-#     - push
-#     - gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'Push'
+  args:
+    - push
+    - gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
 
 - name: 'python'
   id: 'Generate Deployment Files'
@@ -26,10 +26,26 @@ steps:
         --version $BRANCH_NAME \
         --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
 
-# - name: 'python'
-#   id: 'Generate Deployment Files'
-#   args:
-#     - ./generator/generator.py
-#     - --mode backend
-#     - --version $BRANCH_NAME
-#     - --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
+- name: 'python'
+  id: 'Generate Deployment Files'
+  args:
+    - ./generator/generator.py
+    - --mode backend
+    - --version $BRANCH_NAME
+    - --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
+
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: Fetch Credentials
+  args:
+  - container
+  - clusters
+  - get-credentials
+  - demo-cluster
+  - --zone
+  - us-central1-c
+
+- name: 'gcr.io/cloud-builders/kubectl'
+  id: 'Deploy'
+  args:
+    - -f
+    - k8s/output/

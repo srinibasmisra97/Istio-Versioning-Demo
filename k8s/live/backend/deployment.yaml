@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-live
+  labels:
+    app: backend
+    version: live
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+      version: live
+  template:
+    metadata:
+      labels:
+        app: backend
+        version: live
+    spec:
+      containers:
+        - name: api
+          image: gcr.io/dev-trials-project/istio-demo-backend:live
+          imagePullPolicy: Always

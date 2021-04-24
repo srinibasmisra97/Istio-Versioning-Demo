@@ -1,0 +1,11 @@
+
+  - match:
+    - headers:
+        version:
+            exact: "-VERSION-"
+    route:
+    - destination:
+        host: backend
+        subset: -VERSION-
+        port:
+          number: 5000

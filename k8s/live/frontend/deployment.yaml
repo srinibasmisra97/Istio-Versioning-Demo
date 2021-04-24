@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-live
+  labels:
+    app: frontend
+    version: live
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+      version: live
+  template:
+    metadata:
+      labels:
+        app: frontend
+        version: live
+    spec:
+      containers:
+        - name: ui
+          image: gcr.io/dev-trials-project/istio-demo-frontend:live
+          imagePullPolicy: Always
+          env:
+          - name: BACKEND_URL
+            value: http://backend:5000

@@ -13,7 +13,12 @@ steps:
     - push
     - gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
 
-- name: 'python'
+- name: 'alpine'
+  id: 'Print'
+  args:
+    - $BRANCH_NAME
+
+- name: 'python:3.8'
   id: 'Generate Deployment Files'
   args:
     - ./generator/generator.py

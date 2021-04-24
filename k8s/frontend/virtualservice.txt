@@ -5,7 +5,7 @@
             exact: "-VERSION-"
     route:
     - destination:
-        host: backend
+        host: frontend
         subset: -VERSION-
         port:
-          number: 5000
+          number: 80

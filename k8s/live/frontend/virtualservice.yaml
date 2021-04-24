@@ -13,4 +13,4 @@ spec:
         host: frontend
         subset: live
         port:
-          number: 5000
+          number: 80

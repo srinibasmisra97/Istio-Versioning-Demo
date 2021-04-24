@@ -1,5 +1,3 @@
-FROM python:3.8
-WORKDIR /app
-COPY . /app
-RUN pip install -r requirements.txt
-CMD [ "python", "app.py" ]
+FROM nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY index.html /usr/share/nginx/html/index.html

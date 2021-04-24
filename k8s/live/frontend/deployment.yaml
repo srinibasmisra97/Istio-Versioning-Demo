@@ -21,6 +21,3 @@ spec:
         - name: ui
           image: gcr.io/dev-trials-project/istio-demo-frontend:live
           imagePullPolicy: Always
-          env:
-          - name: BACKEND_URL
-            value: http://backend:5000

@@ -10,7 +10,15 @@
 </head>
 
 <body>
-  <h1 style="color: blue" id="data">{{ data }}</h1>
+  <h1 style="color: blue" id="data"></h1>
 </body>
+
+<script>
+  $(document).ready(function(){
+    $.get(window.location.href + "generate", function(data, status){
+      document.getElementById("data").innerText = data;
+    })
+  })
+</script>
 
 </html>

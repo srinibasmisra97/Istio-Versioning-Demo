@@ -11,4 +11,4 @@ def index():
     return "v1-" + random_string
 
 if __name__=="__main__":
-    app.run(host='0.0.0.0', port=5022)
+    app.run(host='0.0.0.0')

@@ -60,6 +60,7 @@ def generate_deployment(mode, imagepath, version):
     template['spec']['template']['spec']['containers'][0]['image'] = imagepath
 
     json.dump(template, open(os.path.join(OUTPUT_DIR, "deployment.json"), "w"))
+    yaml.dump(template, open(os.path.join(OUTPUT_DIR, "deployment.yaml"), "w"))
     print("\nGENERATED DEPLOYMENT JSON")
 
 def generate_destination_rules(mode, version, existing_deloyments):
@@ -82,6 +83,7 @@ def generate_destination_rules(mode, version, existing_deloyments):
 
     template['spec']['subsets'] = subsets
     json.dump(template, open(os.path.join(OUTPUT_DIR, "destinationrule.json"), "w"))
+    yaml.dump(template, open(os.path.join(OUTPUT_DIR, "destinationrule.yaml"), "w"))
     print("\nGENERATED DESTINATION RULE JSON")
 
 def generate_virtual_service(mode, version, existing_deloyments):
@@ -120,6 +122,7 @@ def generate_virtual_service(mode, version, existing_deloyments):
     temp.append(template['spec']['http'][0])
     template['spec']['http'] = temp
     json.dump(template, open(os.path.join(OUTPUT_DIR, "virtualservice.json"), "w"))
+    yaml.dump(template, open(os.path.join(OUTPUT_DIR, "virtualservice.yaml"), "w"))
     print("\nGENERATED VIRTUAL SERVICE JSON")
 
 if __name__=="__main__":

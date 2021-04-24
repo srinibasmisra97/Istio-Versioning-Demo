@@ -25,13 +25,6 @@ steps:
   args:
     - -c
     - 'chown -R root:root ./ && pip install pyyaml && python generator/generator.py --mode backend --version $BRANCH_NAME --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA'
-    # - |
-    # - chown -R root:root ./
-    #   pip install -r ./generator/requirements.txt
-    #   python ./generator/generator.py \
-    #     --mode backend \
-    #     --version $BRANCH_NAME \
-    #     --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
 
 - name: 'alpine'
   entrypoint: '/bin/sh'
@@ -39,22 +32,11 @@ steps:
     - -c
     - 'ls k8s/'
 
-# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#   id: 'Deploy'
-#   entrypoint: /bin/sh
-#   args:
-#     - |
-#     - gcloud container clusters get-credentials ${_GKE_CLUSTER} --zone ${_GCP_ZONE}
-#       export CLOUDSDK_COMPUTE_REGION=${_GCP_REGION}
-#       export CLOUDSDK_COMPUTE_ZONE=${_GCP_ZONE}
-#       export CLOUDSDK_CONTAINER_CLUSTER=${_GKE_CLUSTER}
-#       kubectl apply -f k8s/outputs/
-
 - name: 'gcr.io/cloud-builders/gke-deploy'
   id: Deployment
   args:
   - run
-  - --filename=./k8s/outputs/deployment.json
+  - --filename=./k8s/outputs/deployment.yaml
   - --location=${_GCP_ZONE}
   - --cluster=${_GKE_CLUSTER}
 
@@ -62,7 +44,7 @@ steps:
   id: Destination Rules
   args:
   - run
-  - --filename=./k8s/outputs/destinationrule.json
+  - --filename=./k8s/outputs/destinationrule.yaml
   - --location=${_GCP_ZONE}
   - --cluster=${_GKE_CLUSTER}
 
@@ -70,7 +52,7 @@ steps:
   id: Virtual Service
   args:
   - run
-  - --filename=./k8s/outputs/virtualservice.json
+  - --filename=./k8s/outputs/virtualservice.yaml
   - --location=${_GCP_ZONE}
   - --cluster=${_GKE_CLUSTER}
   

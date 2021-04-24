@@ -28,21 +28,25 @@ steps:
   - --location=${_GCP_ZONE}
   - --cluster=${_GKE_CLUSTER}
 
-- name: 'gcr.io/cloud-builders/gke-deploy'
+- name: 'gcr.io/cloud-builders/kubectl'
   id: Destination Rules
   args:
-  - run
-  - --filename=./k8s/outputs/destinationrule.yaml
-  - --location=${_GCP_ZONE}
-  - --cluster=${_GKE_CLUSTER}
+  - apply
+  - -f
+  - ./k8s/outputs/destinationrule.yaml
+  env:
+    - CLOUDSDK_COMPUTE_ZONE=${_GCP_ZONE}
+    - CLOUDSDK_CONTAINER_CLUSTER=${_GKE_CLUSTER}
 
-- name: 'gcr.io/cloud-builders/gke-deploy'
+- name: 'gcr.io/cloud-builders/kubectl'
   id: Virtual Service
   args:
-  - run
-  - --filename=./k8s/outputs/virtualservice.yaml
-  - --location=${_GCP_ZONE}
-  - --cluster=${_GKE_CLUSTER}
+  - apply
+  - -f
+  - ./k8s/outputs/virtualservice.yaml
+  env:
+    - CLOUDSDK_COMPUTE_ZONE=${_GCP_ZONE}
+    - CLOUDSDK_CONTAINER_CLUSTER=${_GKE_CLUSTER}
   
 substitutions:
   _GCP_REGION: us-central1

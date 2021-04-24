@@ -30,7 +30,7 @@ steps:
   entrypoint: '/bin/sh'
   args:
     - -c
-    - 'ls'
+    - 'ls k8s/'
 
 # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
 #   id: 'Deploy'

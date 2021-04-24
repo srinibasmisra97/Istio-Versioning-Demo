@@ -16,7 +16,7 @@ steps:
 - name: 'python'
   id: 'Generate Deployment Files'
   args:
-    - generator/generator.py
+    - ./generator/generator.py
     - --mode backend
     - --version $BRANCH_NAME
     - --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA

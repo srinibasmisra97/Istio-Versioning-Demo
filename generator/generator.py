@@ -107,10 +107,10 @@ def generate_virtual_service(mode, version, existing_deloyments):
             "route": [
                 {
                 "destination": {
-                    "host": "backend",
+                    "host": mode,
                     "subset": name,
                     "port": {
-                    "number": 5000
+                    "number": 80 if mode == "frontend" else 5000
                     }
                 }
                 }

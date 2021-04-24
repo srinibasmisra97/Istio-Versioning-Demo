@@ -26,16 +26,40 @@ steps:
         --version $BRANCH_NAME \
         --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
 
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  id: 'Deploy'
-  entrypoint: /bin/sh
+# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+#   id: 'Deploy'
+#   entrypoint: /bin/sh
+#   args:
+#     - |
+#     - gcloud container clusters get-credentials ${_GKE_CLUSTER} --zone ${_GCP_ZONE}
+#       export CLOUDSDK_COMPUTE_REGION=${_GCP_REGION}
+#       export CLOUDSDK_COMPUTE_ZONE=${_GCP_ZONE}
+#       export CLOUDSDK_CONTAINER_CLUSTER=${_GKE_CLUSTER}
+#       kubectl apply -f k8s/outputs/
+
+- name: 'gcr.io/cloud-builders/gke-deploy'
+  id: Deployment
   args:
-    - |
-    - gcloud container clusters get-credentials ${_GKE_CLUSTER} --zone ${_GCP_ZONE}
-      export CLOUDSDK_COMPUTE_REGION=${_GCP_REGION}
-      export CLOUDSDK_COMPUTE_ZONE=${_GCP_ZONE}
-      export CLOUDSDK_CONTAINER_CLUSTER=${_GKE_CLUSTER}
-      kubectl apply -f k8s/outputs/
+  - run
+  - --filename=./k8s/outputs/deployment.json
+  - --location=${_GCP_ZONE}
+  - --cluster=${_GKE_CLUSTER}
+
+- name: 'gcr.io/cloud-builders/gke-deploy'
+  id: Destination Rules
+  args:
+  - run
+  - --filename=./k8s/outputs/destinationrule.json
+  - --location=${_GCP_ZONE}
+  - --cluster=${_GKE_CLUSTER}
+
+- name: 'gcr.io/cloud-builders/gke-deploy'
+  id: Virtual Service
+  args:
+  - run
+  - --filename=./k8s/outputs/virtualservice.json
+  - --location=${_GCP_ZONE}
+  - --cluster=${_GKE_CLUSTER}
   
 substitutions:
   _GCP_REGION: us-central1

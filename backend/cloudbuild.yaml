@@ -24,7 +24,7 @@ steps:
   entrypoint: /bin/sh
   args:
     - -c
-    - 'chown -R root:root ./ && pip install yaml && python generator/generator.py --mode backend --version $BRANCH_NAME --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA'
+    - 'chown -R root:root ./ && pip install pyyaml && python generator/generator.py --mode backend --version $BRANCH_NAME --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA'
     # - |
     # - chown -R root:root ./
     #   pip install -r ./generator/requirements.txt

@@ -26,14 +26,6 @@ steps:
         --version $BRANCH_NAME \
         --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
 
-- name: 'python'
-  id: 'Generate Deployment Files'
-  args:
-    - ./generator/generator.py
-    - --mode backend
-    - --version $BRANCH_NAME
-    - --image gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
-
 - name: 'gcr.io/cloud-builders/gcloud'
   id: Fetch Credentials
   args:

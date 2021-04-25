@@ -13,6 +13,16 @@ steps:
     - push
     - gcr.io/$PROJECT_ID/istio-demo-frontend:$SHORT_SHA
 
+- name: 'gcr.io/cloud-builders/gcloud'
+  id: Fetch Credentials
+  args:
+    - container
+    - clusters
+    - get-credentials
+    - ${_GKE_CLUSTER}
+    - --zone
+    - ${_GCP_ZONE}
+
 - name: 'gcr.io/cloud-builders/kubectl'
   id: Get Existing Deployments
   entrypoint: /bin/sh

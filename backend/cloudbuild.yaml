@@ -13,6 +13,16 @@ steps:
     - push
     - gcr.io/$PROJECT_ID/istio-demo-backend:$SHORT_SHA
 
+- name: 'gcr.io/cloud-builders/kubectl'
+  id: Get Existing Deployments
+  entrypoint: /bin/sh
+  args:
+  - -c
+  - 'chown -R root:root ./ && kubectl get deployments -o name > generator/names.txt'
+  env:
+    - CLOUDSDK_COMPUTE_ZONE=${_GCP_ZONE}
+    - CLOUDSDK_CONTAINER_CLUSTER=${_GKE_CLUSTER}
+
 - name: 'python'
   id: 'Generate Deployment Files'
   entrypoint: /bin/sh

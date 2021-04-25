@@ -1,2 +1,0 @@
-deployment.apps/backend-live
-deployment.apps/frontend-live
